@@ -33,40 +33,41 @@ module.exports = async (req, res) => {
     colors.forEach((col, index) => {
         const x = index * columnWidth;
 
-        // A) Draw the rectangle
+        // Draw the stripe
         rects += `
-      <rect
-        x="${x}"
-        y="0"
-        width="${columnWidth}"
-        height="${height}"
-        fill="${col}"
-      />
-    `;
+    <rect
+      x="${x}"
+      y="0"
+      width="${columnWidth}"
+      height="${height}"
+      fill="${col}"
+    />
+  `;
 
-        // B) Add a text label in the middle
-        // We'll center it horizontally in the stripe, and put it around half the height.
-        const textX = x + columnWidth / 2;
-        const textY = height / 2; // vertical center
+        // Decide text color via brightness
         const textColor = getContrastingTextColor(col);
-
-        // Optionally remove the "#" from displayed code
+        // Remove the "#" in display
         const displayedCode = col.replace(/^#/, "");
 
+        // Position the text near the bottom center
+        const textX = x + columnWidth / 2;
+        const textY = height - 20; // 20px from the bottom
+
         labels += `
-      <text
-        x="${textX}"
-        y="${textY}"
-        fill="${textColor}"
-        font-size="40"
-        text-anchor="middle"
-        alignment-baseline="middle"
-        font-family="sans-serif"
-      >
-        ${displayedCode}
-      </text>
-    `;
+    <text
+      x="${textX}"
+      y="${textY}"
+      fill="${textColor}"
+      font-size="16"
+      text-anchor="middle"
+      alignment-baseline="baseline"
+      font-family="sans-serif"
+    >
+      ${displayedCode}
+    </text>
+  `;
     });
+
 
     // 4) Combine rectangles + labels into final SVG
     const svg = `
